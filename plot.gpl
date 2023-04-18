@@ -1,0 +1,4 @@
+# set term png
+# set output plot.png
+set datafile separator ','
+plot "f.csv" w lp

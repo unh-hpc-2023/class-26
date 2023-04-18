@@ -16,19 +16,19 @@ find_package(MPI REQUIRED)
 # )
 # include(GoogleTest)
 
-# CPMAddPackage(
-#   NAME xtl
-#   GITHUB_REPOSITORY xtensor-stack/xtl
-#   GIT_TAG 0.7.5
-#   VERSION 0.7.5
-# )
+CPMAddPackage(
+  NAME xtl
+  GITHUB_REPOSITORY xtensor-stack/xtl
+  GIT_TAG 0.7.5
+  VERSION 0.7.5
+)
 
-# CPMAddPackage(
-#   NAME xtensor
-#   GITHUB_REPOSITORY xtensor-stack/xtensor
-#   GIT_TAG 0.24.5
-#   VERSION 0.24.5
-# )
+CPMAddPackage(
+  NAME xtensor
+  GITHUB_REPOSITORY xtensor-stack/xtensor
+  GIT_TAG 0.24.5
+  VERSION 0.24.5
+)
 
 add_executable(test_mpi test_mpi.cxx)
 target_link_libraries(test_mpi PRIVATE MPI::MPI_CXX)
@@ -38,5 +38,8 @@ target_link_libraries(mpi_message PRIVATE MPI::MPI_CXX)
 
 add_executable(test_integration test_integration.cxx)
 target_link_libraries(test_integration PRIVATE MPI::MPI_CXX)
+
+add_executable(test_derivative test_derivative.cxx)
+target_link_libraries(test_derivative PRIVATE MPI::MPI_CXX xtensor)
 
 add_subdirectory(omp)
