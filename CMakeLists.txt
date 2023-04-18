@@ -33,4 +33,7 @@ find_package(MPI REQUIRED)
 add_executable(test_mpi test_mpi.cxx)
 target_link_libraries(test_mpi PRIVATE MPI::MPI_CXX)
 
+add_executable(mpi_message mpi_message.cxx)
+target_link_libraries(mpi_message PRIVATE MPI::MPI_CXX)
+
 add_subdirectory(omp)
