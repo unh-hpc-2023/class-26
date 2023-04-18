@@ -26,9 +26,12 @@ xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
 
 int main(int argc, char** argv)
 {
+  const int N = 16; // number of grid points
+
   // create coordinates [0, 2pi)
-  auto x = xt::linspace<double>(0., 2. * M_PI, 16, false);
-  double dx = x(1) - x(0);
+  double dx = 2. * M_PI / N;
+  auto x = xt::arange<double>(0., 2. * M_PI, dx);
+
   // our original function f
   auto f = sin(x);
 
