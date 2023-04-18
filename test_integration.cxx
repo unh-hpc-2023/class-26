@@ -25,10 +25,20 @@ int main(int argc, char** argv)
   for (int i = ib; i < ie; i++) {
     sum += .5 * dx * (f(i * dx) + f((i + 1) * dx));
   }
+
+  if (rank == 0) {
+    double total_sum = sum;
+    for (int r = 1; r < size; r++) {
+      MPI_Recv(&sum, 1, MPI_DOUBLE, r, 123, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      total_sum += sum;
+    }
+    std::cout << "integral is approximately " << total_sum << "\n";
+  } else {
+    MPI_Send(&sum, 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD);
+  }
+
   double t2 = MPI_Wtime();
   std::cout << "time " << t2 - t1 << " secs\n";
-
-  std::cout << "integral is approximately " << sum << "\n";
 
   MPI_Finalize();
   return 0;
