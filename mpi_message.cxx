@@ -13,7 +13,13 @@ int main(int argc, char** argv)
 
   if (rank == 0) {
     test = 99;
+    MPI_Send(&test, 1, MPI_INT, 1, 123, MPI_COMM_WORLD);
+    MPI_Send(&test, 1, MPI_INT, 2, 123, MPI_COMM_WORLD);
     MPI_Send(&test, 1, MPI_INT, 3, 123, MPI_COMM_WORLD);
+  } else if (rank == 1) {
+    MPI_Recv(&test, 1, MPI_INT, 0, 123, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  } else if (rank == 2) {
+    MPI_Recv(&test, 1, MPI_INT, 0, 123, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   } else if (rank == 3) {
     MPI_Recv(&test, 1, MPI_INT, 0, 123, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
