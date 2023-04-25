@@ -39,7 +39,7 @@ target_link_libraries(mpi_message PRIVATE MPI::MPI_CXX)
 add_executable(test_integration test_integration.cxx)
 target_link_libraries(test_integration PRIVATE MPI::MPI_CXX)
 
-add_executable(test_derivative test_derivative.cxx)
+add_executable(test_derivative test_derivative.cxx derivative.cxx)
 target_link_libraries(test_derivative PRIVATE MPI::MPI_CXX xtensor)
 
 add_subdirectory(omp)
