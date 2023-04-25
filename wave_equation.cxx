@@ -41,8 +41,9 @@ int main(int argc, char** argv)
     }
 
     // advance one timestep
-    auto ut = -c * derivative(u, dx);
-    u += dt * ut;
+    auto k1 = -c * derivative(u, dx);
+    auto k2 = -c * derivative(u + .5 * dt * k1, dx);
+    u += dt * k2;
   }
 
   MPI_Finalize();
