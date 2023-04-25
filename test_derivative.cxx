@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <mpi.h>
+
 xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
 {
   const int G = 1;
@@ -28,6 +30,11 @@ int main(int argc, char** argv)
 {
   const int N = 16; // number of grid points
 
+  MPI_Init(&argc, &argv);
+  int rank, size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+
   // create coordinates [0, 2pi)
   double dx = 2. * M_PI / N;
   auto x = xt::arange<double>(0., 2. * M_PI, dx);
@@ -41,5 +48,6 @@ int main(int argc, char** argv)
   std::ofstream out("f.csv");
   xt::dump_csv(out, xt::stack(xt::xtuple(x, f, fprime), 1));
 
+  MPI_Finalize();
   return 0;
 }
