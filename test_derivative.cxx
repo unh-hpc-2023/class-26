@@ -45,7 +45,7 @@ int main(int argc, char** argv)
   // calculate derivative
   auto fprime = derivative(f, dx);
 
-  std::ofstream out("f.csv");
+  std::ofstream out("f-" + std::to_string(rank) + ".csv");
   xt::dump_csv(out, xt::stack(xt::xtuple(x, f, fprime), 1));
 
   MPI_Finalize();
