@@ -29,7 +29,7 @@ xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
 
 int main(int argc, char** argv)
 {
-  const int N = 16; // number of grid points
+  const int N = 32; // number of grid points
 
   MPI_Init(&argc, &argv);
   int rank, size;
