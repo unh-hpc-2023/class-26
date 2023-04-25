@@ -1,0 +1,5 @@
+# set term png
+# set output "plot_wave.png"
+set datafile separator ','
+set st d lp
+plot "u-0-0.csv", "u-1-0.csv", "u-2-0.csv", "u-3-0.csv", "u-4-0.csv"
