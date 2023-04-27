@@ -3,12 +3,24 @@
 
 #include <xtensor/xpad.hpp>
 
+#include <mpi.h>
+
 void fill_ghosts(xt::xtensor<double, 1>& f_g)
 {
   const int G = 1;
   int n = f_g.shape(0) - 2 * G;
-  f_g(G + -1) = f_g(G + n - 1);
-  f_g(G + n) = f_g(G + 0);
+
+  int rank, size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+  assert(size == 2);
+  if (rank == 0) {
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD);
+  } else {
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  }
 }
 
 xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
