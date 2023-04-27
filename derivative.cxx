@@ -20,31 +20,15 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   int rank_right = (rank < size - 1) ? rank + 1 : 0;
   int rank_left = (rank > 0) ? rank - 1 : size - 1;
 
-  if (rank < size - 1) {
-    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  }
+  MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
+           MPI_COMM_WORLD);
+  MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
+           MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-  if (rank > 0) {
-    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  }
-
-  if (rank == 0) {
-    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  } else if (rank == size - 1) {
-    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  }
+  MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
+           MPI_COMM_WORLD);
+  MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
+           MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
 
 xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
