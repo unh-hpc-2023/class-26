@@ -26,10 +26,10 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   }
 
   if (rank == 0) {
-    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD,
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
-  } else if (rank == 1) {
+  } else if (rank == 3) {
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
