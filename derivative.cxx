@@ -17,8 +17,7 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   const int tag_left_to_right = 123;
   const int tag_right_to_left = 456;
 
-  assert(size == 4);
-  if (rank < 3) {
+  if (rank < size - 1) {
     int rank_right = rank + 1;
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
              MPI_COMM_WORLD);
@@ -35,12 +34,12 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   }
 
   if (rank == 0) {
-    int rank_left = 3;
+    int rank_left = size - 1;
     MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
              MPI_COMM_WORLD);
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  } else if (rank == 3) {
+  } else if (rank == size - 1) {
     int rank_right = 0;
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
              MPI_COMM_WORLD);
