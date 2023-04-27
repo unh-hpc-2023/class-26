@@ -25,6 +25,26 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
              MPI_STATUS_IGNORE);
   }
 
+  if (rank == 1) {
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 2, 123, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 2, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  } else if (rank == 2) {
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  }
+
+  if (rank == 2) {
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 3, 123, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 3, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  } else if (rank == 3) {
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 2, 123, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 2, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  }
+
   if (rank == 0) {
     MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD,
