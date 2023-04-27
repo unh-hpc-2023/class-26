@@ -27,7 +27,7 @@ int main(int argc, char** argv)
   auto x = xt::arange<double>(rank * n, (rank + 1) * n) * dx;
 
   // our original function f
-  auto f = sin(x);
+  auto f = sin(x + 1);
 
   // calculate derivative
   auto fprime = derivative(f, dx);
