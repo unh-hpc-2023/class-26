@@ -14,12 +14,12 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-  assert(size == 2);
+  assert(size == 4);
   if (rank == 0) {
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
-  } else {
+  } else if (rank == 1) {
     MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
@@ -29,7 +29,7 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
     MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
-  } else {
+  } else if (rank == 1) {
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
