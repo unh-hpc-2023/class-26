@@ -14,19 +14,24 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+  const int tag_left_to_right = 123;
+  const int tag_right_to_left = 456;
+
   assert(size == 4);
   if (rank < 3) {
     int rank_right = rank + 1;
-    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, 123, MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, 123, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
   if (rank > 0) {
     int rank_left = rank - 1;
-    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, 123, MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, 123, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
   if (rank == 0) {
