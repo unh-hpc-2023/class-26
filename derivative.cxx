@@ -17,7 +17,10 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   assert(size == 2);
   if (rank == 0) {
     MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 1, 123, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
   } else {
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD);
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
   }
