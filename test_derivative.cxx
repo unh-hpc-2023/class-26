@@ -12,15 +12,14 @@ int main(int argc, char** argv)
   const int N = 32; // number of grid points
 
   MPI_Init(&argc, &argv);
-  mpi_domain domain(MPI_COMM_WORLD);
-
-  assert(N % domain.size() == 0); // # grid points must be divisible by # procs
-  int n = N / domain.size();
+  mpi_domain domain(MPI_COMM_WORLD, N);
 
   // create coordinates [0, 2pi)
   double L = 2. * M_PI; // total size of domain
-  double dx = L / N;
-  auto x = xt::arange<double>(domain.rank() * n, (domain.rank() + 1) * n) * dx;
+  double dx = L / domain.N();
+  auto x = xt::arange<double>(domain.rank() * domain.n(),
+                              (domain.rank() + 1) * domain.n()) *
+           dx;
 
   // our original function f
   auto f = sin(x + 1);
