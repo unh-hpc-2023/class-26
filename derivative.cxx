@@ -24,6 +24,16 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
     MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 0, 123, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
   }
+
+  if (rank == 0) {
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 1, 456, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  } else {
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
+  }
 }
 
 xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx)
