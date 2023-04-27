@@ -35,13 +35,17 @@ void fill_ghosts(xt::xtensor<double, 1>& f_g)
   }
 
   if (rank == 0) {
-    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, 3, 456, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
+    int rank_left = 3;
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   } else if (rank == 3) {
-    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, 0, 456, MPI_COMM_WORLD,
-             MPI_STATUS_IGNORE);
+    int rank_right = 0;
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 }
 
