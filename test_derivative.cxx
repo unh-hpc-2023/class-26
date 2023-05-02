@@ -16,9 +16,7 @@ int main(int argc, char** argv)
   mpi_domain domain(MPI_COMM_WORLD, N, L);
 
   // create coordinates [0, 2pi)
-  auto x = xt::arange<double>(domain.rank() * domain.n(),
-                              (domain.rank() + 1) * domain.n()) *
-           domain.dx();
+  auto x = domain.coords();
 
   // our original function f
   auto f = sin(x + 1);
