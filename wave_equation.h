@@ -7,6 +7,8 @@
 
 #include <mpi.h>
 
+#include <cassert>
+
 class mpi_domain
 {
 public:
@@ -32,6 +34,29 @@ public:
   auto coords() const
   {
     return xt::arange<double>(rank() * n(), (rank() + 1) * n()) * dx();
+  }
+
+  void fill_ghosts(xt::xtensor<double, 1>& f_g) const
+  {
+    const int G = 1;
+    int n = this->n();
+    assert(f_g.shape(0) == n + 2 * G);
+
+    const int tag_left_to_right = 123;
+    const int tag_right_to_left = 456;
+
+    int rank_right = (rank() < size() - 1) ? rank() + 1 : 0;
+    int rank_left = (rank() > 0) ? rank() - 1 : size() - 1;
+
+    MPI_Send(&f_g(G + n - 1), 1, MPI_DOUBLE, rank_right, tag_left_to_right,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G - 1), 1, MPI_DOUBLE, rank_left, tag_left_to_right,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+    MPI_Send(&f_g(G + 0), 1, MPI_DOUBLE, rank_left, tag_right_to_left,
+             MPI_COMM_WORLD);
+    MPI_Recv(&f_g(G + n), 1, MPI_DOUBLE, rank_right, tag_right_to_left,
+             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
 private:
