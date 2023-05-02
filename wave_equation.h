@@ -39,6 +39,7 @@ private:
   double dx_; // grid spacing
 };
 
-xt::xtensor<double, 1> derivative(const xt::xtensor<double, 1>& f, double dx);
+xt::xtensor<double, 1> derivative(const mpi_domain& domain,
+                                  const xt::xtensor<double, 1>& f);
 
 #endif

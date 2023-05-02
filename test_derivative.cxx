@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   auto f = sin(x + 1);
 
   // calculate derivative
-  auto fprime = derivative(f, domain.dx());
+  auto fprime = derivative(domain, f);
 
   std::ofstream out("f-" + std::to_string(domain.rank()) + ".csv");
   xt::dump_csv(out, xt::stack(xt::xtuple(x, f, fprime), 1));
