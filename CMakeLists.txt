@@ -51,4 +51,7 @@ target_link_libraries(wave_equation PRIVATE MPI::MPI_CXX xtensor)
 add_executable(kdv kdv.cxx)
 target_link_libraries(kdv PRIVATE MPI::MPI_CXX xtensor)
 
+add_executable(heat_eqn heat_eqn.cxx)
+target_link_libraries(heat_eqn PRIVATE MPI::MPI_CXX xtensor)
+
 add_subdirectory(omp)
