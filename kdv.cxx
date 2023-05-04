@@ -67,7 +67,9 @@ int main(int argc, char** argv)
     // advance one timestep
     auto k1 = rhs(domain, u);
     auto k2 = rhs(domain, u + .5 * dt * k1);
-    u += dt * k2;
+    auto k3 = rhs(domain, u + .5 * dt * k2);
+    auto k4 = rhs(domain, u + dt * k3);
+    u += (1. / 6.) * dt * (k1 + 2. * k2 + 2. * k3 + k4);
   }
 
   MPI_Finalize();
