@@ -46,15 +46,18 @@ public:
     int rank_right = (rank() < size() - 1) ? rank() + 1 : 0;
     int rank_left = (rank() > 0) ? rank() - 1 : size() - 1;
 
-    MPI_Send(&f_g(G + n - G), G, MPI_DOUBLE, rank_right, tag_left_to_right,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G - G), G, MPI_DOUBLE, rank_left, tag_left_to_right,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Request reqs[4];
+    MPI_Irecv(&f_g(G - G), G, MPI_DOUBLE, rank_left, tag_left_to_right,
+              MPI_COMM_WORLD, &reqs[0]);
+    MPI_Irecv(&f_g(G + n), G, MPI_DOUBLE, rank_right, tag_right_to_left,
+              MPI_COMM_WORLD, &reqs[1]);
 
-    MPI_Send(&f_g(G + 0), G, MPI_DOUBLE, rank_left, tag_right_to_left,
-             MPI_COMM_WORLD);
-    MPI_Recv(&f_g(G + n), G, MPI_DOUBLE, rank_right, tag_right_to_left,
-             MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Isend(&f_g(G + n - G), G, MPI_DOUBLE, rank_right, tag_left_to_right,
+              MPI_COMM_WORLD, &reqs[2]);
+    MPI_Isend(&f_g(G + 0), G, MPI_DOUBLE, rank_left, tag_right_to_left,
+              MPI_COMM_WORLD, &reqs[3]);
+
+    MPI_Waitall(4, reqs, MPI_STATUSES_IGNORE);
   }
 
 private:
